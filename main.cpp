@@ -1,5 +1,3 @@
-// 6616053114:AAHLzPA5NKlyYOzkrq2UPz0dUXSYVcH-OX0
-// -668390686
 #include <stdio.h>
 #include <tgbot/tgbot.h>
 #include <vector>
