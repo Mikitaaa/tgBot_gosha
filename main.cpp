@@ -6,18 +6,25 @@
 #include <cstdlib>
 #include <ctime>
 
+#include "GPT2_handler.h"
+
 int main() {
     srand(time(NULL));  // Seed the random number generator
+    std::string model_path;
+    std::cout << "Введите путь к модели GPT-2: ";
+    std::cin >> model_path;
+    std::cin.ignore(32767, '\n');
     
     std::vector<int> allowedChats = {-668390686};
     const int ResponseRate = 3;
     
+    Gpt2Model model(model_path);
     TgBot::Bot bot("6616053114:AAEON-uUjywJkW7RGQ77Lg_78tbS1oNGbV4");
-    std::vector<std::string> responses = {"ok"};
+    
     int messageCount = 0;
     time_t lastUpdateTime = time(NULL);
     
-bot.getEvents().onAnyMessage([&bot, &messageCount, &responses, &allowedChats, &lastUpdateTime](TgBot::Message::Ptr message) {
+bot.getEvents().onAnyMessage([&bot, &messageCount, &model, &allowedChats, &lastUpdateTime](TgBot::Message::Ptr message) {
     try {
         if (message->date < lastUpdateTime) { return; } // accept only new mwssages
                                 
@@ -32,8 +39,8 @@ bot.getEvents().onAnyMessage([&bot, &messageCount, &responses, &allowedChats, &l
             }
 
             if (!(messageCount % ResponseRate)) { // reply to every n'th message
-                int randomIndex = rand() % responses.size();
-                bot.getApi().sendMessage(message->chat->id, responses[randomIndex], true, message->messageId);
+                std::string response = model.generateResponse(message->text);
+                bot.getApi().sendMessage(message->chat->id, response, true, message->messageId);
             }
         }else{
             bot.getApi().sendMessage(message->chat->id, "Извините, этот бот только для АВТОМАТИЗАЦИИ");
