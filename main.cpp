@@ -17,7 +17,7 @@ int main() {
     const int ResponseRate = 3;
     
     Gpt2Model model(model_path);
-    TgBot::Bot bot("6616053114:AAEON-uUjywJkW7RGQ77Lg_78tbS1oNGbV4");
+    TgBot::Bot bot("");
     
     int messageCount = 0;
     time_t lastUpdateTime = time(NULL);
